@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Obelix Phase 1 – Golive Tracking</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js" integrity="sha384-iU8HYtnGQ8Cy4zl7gbNMOhsDTTKX02BTXptVP/vqAWIaTfM7isw76iyZCsjL2eVi" crossorigin="anonymous"></script>
+<style>
+:root { color-scheme: light; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0f2f5; color: #1a2332; padding: 14px; font-size: 13px; }
+
+/* ── HEADER ── */
+.header { background: #1B6B6B; color: #fff; border-radius: 10px; padding: 14px 18px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+.header h1 { font-size: 15px; font-weight: 700; }
+.header .sub { font-size: 11px; opacity: 0.75; margin-top: 3px; }
+.header .date-badge { text-align: right; font-size: 11px; opacity: 0.85; }
+.header .date-badge strong { font-size: 14px; display: block; }
+
+/* ── EXEC SUMMARY ── */
+.exec-summary { background: #fff; border-radius: 10px; padding: 14px 16px; margin-bottom: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); border-left: 4px solid #1B6B6B; }
+.section-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #1B6B6B; margin-bottom: 8px; }
+.exec-body { font-size: 12px; color: #374151; line-height: 1.7; }
+
+/* ── ALPHA CARD ── */
+.alpha-card { background: #fffbeb; border: 2px solid #f59e0b; border-radius: 10px; padding: 14px 16px; margin-bottom: 10px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); }
+.alpha-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+.alpha-title-group .alpha-title { font-size: 12px; font-weight: 700; color: #92400e; }
+.alpha-title-group .alpha-sub { font-size: 11px; color: #78350f; margin-top: 2px; }
+.alpha-badge { background: #f59e0b; color: #fff; font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 20px; white-space: nowrap; }
+.alpha-metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 10px; }
+.alpha-metric { text-align: center; background: #fef3c7; border-radius: 7px; padding: 10px 6px; }
+.alpha-metric-num { font-size: 22px; font-weight: 800; color: #92400e; }
+.alpha-metric-num.placeholder { font-size: 16px; color: #b45309; }
+.alpha-metric-label { font-size: 10px; color: #78350f; margin-top: 3px; }
+.alpha-footer { display: flex; gap: 16px; font-size: 11px; color: #78350f; flex-wrap: wrap; }
+.alpha-footer span { display: flex; align-items: center; gap: 4px; }
+
+/* ── HOT ALERT ── */
+.hot-alert { border-radius: 10px; padding: 12px 16px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 1px 4px rgba(0,0,0,0.07); }
+.hot-alert.danger { background: #fef2f2; border: 2px solid #dc2626; }
+.hot-alert.ok { background: #f0fdf4; border: 2px solid #22c55e; }
+.hot-left { display: flex; align-items: center; gap: 12px; }
+.hot-num { font-size: 40px; font-weight: 900; line-height: 1; }
+.hot-num.danger { color: #dc2626; }
+.hot-num.ok { color: #15803d; }
+.hot-info strong { font-size: 12px; }
+.hot-info p { font-size: 11px; color: #6b7280; margin-top: 3px; max-width: 400px; line-height: 1.5; }
+.hot-target { text-align: right; }
+.hot-target-label { font-size: 10px; color: #6b7280; }
+.hot-target-num { font-size: 28px; font-weight: 800; color: #15803d; }
+
+/* ── DELTA CHIP ── */
+.delta { font-size: 12px; font-weight: 700; padding: 2px 7px; border-radius: 10px; display: inline-block; }
+.delta.neutral { background: #f3f4f6; color: #6b7280; }
+.delta.positive { background: #dcfce7; color: #15803d; }
+.delta.negative { background: #fef2f2; color: #dc2626; }
+
+/* ── BIG 3 KPIs ── */
+.kpi-three { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+.kpi-big { background: #fff; border-radius: 10px; padding: 16px 18px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); }
+.kpi-big.todo { border-top: 4px solid #9ca3af; }
+.kpi-big.inprogress { border-top: 4px solid #E8650A; }
+.kpi-big.done { border-top: 4px solid #1B6B6B; }
+.kpi-top { display: flex; justify-content: space-between; align-items: flex-start; }
+.kpi-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #6b7280; }
+.kpi-number { font-size: 52px; font-weight: 900; line-height: 1; margin-top: 6px; }
+.kpi-big.todo .kpi-number { color: #374151; }
+.kpi-big.inprogress .kpi-number { color: #E8650A; }
+.kpi-big.done .kpi-number { color: #1B6B6B; }
+.kpi-pct { font-size: 12px; color: #6b7280; margin-top: 4px; }
+.kpi-pct strong { color: #1a2332; }
+
+/* ── PROGRESS BAR ── */
+.progress-card { background: #fff; border-radius: 10px; padding: 14px 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); margin-bottom: 12px; }
+.progress-header { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 11px; font-weight: 600; color: #374151; }
+.progress-pct { color: #1B6B6B; font-size: 14px; font-weight: 800; }
+.bar-bg { background: #e5e7eb; border-radius: 6px; height: 10px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 6px; background: linear-gradient(90deg, #1B6B6B, #22c55e); }
+.bar-markers { display: flex; justify-content: space-between; margin-top: 4px; font-size: 10px; color: #9ca3af; }
+
+/* ── SCENARIO PANEL ── */
+.scenario-section { margin-bottom: 12px; }
+.scenario-section-title { font-size: 11px; font-weight: 700; color: #374151; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+.scenario-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+.sc-card { border-radius: 10px; padding: 14px 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); }
+.sc-card.s1 { background: #fff; border-top: 4px solid #dc2626; }
+.sc-card.s2 { background: #fff; border-top: 4px solid #f59e0b; }
+.sc-card.s3 { background: #fff; border-top: 4px solid #3b82f6; }
+.sc-tag { font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; padding: 2px 8px; border-radius: 20px; display: inline-block; margin-bottom: 6px; }
+.sc-card.s1 .sc-tag { background: #fef2f2; color: #dc2626; }
+.sc-card.s2 .sc-tag { background: #fffbeb; color: #d97706; }
+.sc-card.s3 .sc-tag { background: #eff6ff; color: #2563eb; }
+.sc-title { font-size: 12px; font-weight: 700; color: #1a2332; margin-bottom: 2px; }
+.sc-desc { font-size: 10px; color: #6b7280; margin-bottom: 12px; line-height: 1.4; }
+.sc-rows { display: flex; flex-direction: column; gap: 8px; }
+.sc-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 10px; border-radius: 7px; background: #f9fafb; }
+.sc-row-label { font-size: 10px; color: #6b7280; }
+.sc-row-val { font-size: 13px; font-weight: 800; }
+.sc-row-val.red { color: #dc2626; }
+.sc-row-val.amber { color: #d97706; }
+.sc-row-val.green { color: #15803d; }
+.sc-row-val.blue { color: #2563eb; }
+.sc-row-val.grey { color: #9ca3af; font-size: 11px; font-weight: 600; }
+.sc-feasibility { margin-top: 12px; padding: 8px 12px; border-radius: 7px; text-align: center; font-size: 11px; font-weight: 700; }
+.sc-feasibility.red { background: #fef2f2; color: #dc2626; }
+.sc-feasibility.amber { background: #fffbeb; color: #d97706; }
+.sc-feasibility.blue { background: #eff6ff; color: #2563eb; }
+.sc-feasibility.grey { background: #f3f4f6; color: #6b7280; }
+.sc-golive { margin-top: 8px; padding: 8px 12px; border-radius: 7px; text-align: center; }
+.sc-golive-label { font-size: 9px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; }
+.sc-golive-date { font-size: 14px; font-weight: 800; margin-top: 2px; }
+
+/* ── PIPELINE ── */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+.ip-section { background: #fff; border-radius: 10px; padding: 14px 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); }
+.ip-stages { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.ip-stage { border-radius: 7px; padding: 10px; }
+.ip-stage.ref { background: #f0f9ff; border-top: 3px solid #0ea5e9; }
+.ip-stage.sfdev { background: #fff7ed; border-top: 3px solid #f97316; }
+.ip-stage.sftest { background: #fef3c7; border-top: 3px solid #d97706; }
+.ip-stage.svvqa { background: #f0fdf4; border-top: 3px solid #22c55e; }
+.ip-stage-num { font-size: 26px; font-weight: 800; color: #1a2332; }
+.ip-stage-label { font-size: 10px; color: #6b7280; margin-top: 2px; }
+.ip-delta { margin-top: 4px; }
+
+/* ── PROBLEM ITEMS ── */
+.pc-card { background: #fff; border-radius: 10px; padding: 14px 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); border-left: 4px solid #f59e0b; }
+.pc-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.pc-title-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #d97706; }
+.pc-total { font-size: 22px; font-weight: 800; color: #d97706; }
+.pc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.pc-item { text-align: center; padding: 10px; border-radius: 6px; background: #fffbeb; }
+.pc-item-num { font-size: 24px; font-weight: 800; color: #d97706; }
+.pc-item-label { font-size: 10px; color: #9ca3af; margin-top: 2px; }
+.pc-item-delta { margin-top: 3px; }
+
+/* ── SPRINT SCHEDULE ── */
+.sprint-section { background: #fff; border-radius: 10px; padding: 14px 16px; margin-bottom: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); }
+.sprint-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
+.sprint-card { border-radius: 8px; padding: 10px 12px; }
+.sprint-card.active { background: #E8F4F4; border: 2px solid #1B6B6B; }
+.sprint-card.upcoming { background: #f9fafb; border: 1px solid #e5e7eb; }
+.sprint-card.s2only { background: #fffbeb; border: 1px dashed #f59e0b; }
+.sprint-card.alpha-sprint { background: #f0fdf4; border: 2px solid #22c55e; }
+.sprint-badge { display: inline-block; font-size: 9px; font-weight: 700; padding: 1px 6px; border-radius: 8px; margin-bottom: 4px; }
+.sprint-badge.active { background: #1B6B6B; color: #fff; }
+.sprint-badge.alpha { background: #22c55e; color: #fff; }
+.sprint-badge.s1end { background: #dc2626; color: #fff; }
+.sprint-badge.s2only-badge { background: #f59e0b; color: #fff; }
+.sprint-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #6b7280; }
+.sprint-dates { font-size: 10px; font-weight: 600; color: #1a2332; margin-top: 3px; }
+.sprint-days-num { font-size: 20px; font-weight: 800; color: #1a2332; margin-top: 4px; line-height: 1; }
+.sprint-note { font-size: 9px; color: #dc2626; margin-top: 3px; line-height: 1.3; }
+.sprint-note.green { color: #15803d; }
+.sprint-note.amber { color: #d97706; }
+.sprint-summary { margin-top: 12px; padding-top: 10px; border-top: 1px solid #f3f4f6; display: flex; gap: 20px; font-size: 11px; flex-wrap: wrap; }
+
+/* ── VELOCITY ROW ── */
+.metrics-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 12px; }
+.metric-card { background: #fff; border-radius: 10px; padding: 12px 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); text-align: center; }
+.metric-val { font-size: 20px; font-weight: 800; color: #1B6B6B; }
+.metric-val.na { font-size: 14px; color: #9ca3af; }
+.metric-label { font-size: 10px; color: #6b7280; margin-top: 4px; font-weight: 500; }
+.metric-sub { font-size: 10px; color: #9ca3af; margin-top: 2px; }
+
+/* ── CHARTS ── */
+.charts-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 10px; margin-bottom: 10px; }
+.chart-card { background: #fff; border-radius: 10px; padding: 14px 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); }
+.chart-title { font-size: 11px; font-weight: 600; color: #374151; margin-bottom: 10px; }
+.chart-wrap { height: 180px; position: relative; }
+
+/* ── FOOTER ── */
+.footer { text-align: center; font-size: 10px; color: #9ca3af; padding-top: 4px; }
+a { color: #1B6B6B; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div>
+    <h1>Obelix Phase 1 – Golive Tracking</h1>
+    <div class="sub">SF Implementation · Phase 1 Critical Scope · 738 user stories · Go-Live Nov 23, 2026</div>
+  </div>
+  <div class="date-badge"><strong id="todayDate">May 14, 2026</strong>Updated today</div>
+</div>
+
+<!-- EXEC SUMMARY -->
+<div class="exec-summary">
+  <div class="section-label">📋 Executive Summary – Yesterday's Progress</div>
+  <div class="exec-body">Done remains flat at 201 / 738 (27.2%) — no stories completed today as India team works through pipeline stages during FI public holiday. SF Testing surged to 170 (+8 vs. Monday), with SF Dev at 58 (−4), confirming work is progressing through the funnel. Not-in-release corrected to 2 (was 5). S1 requires 14.9 stories/day to Jul 3 — well above current velocity; S2 (Jul 31) requires 9.6/day.</div>
+</div>
+
+<!-- SF ALPHA MILESTONE -->
+<div class="alpha-card">
+  <div class="alpha-top">
+    <div class="alpha-title-group">
+      <div class="alpha-title">🔑 SF Alpha — Leading Indicator for SIT Start</div>
+      <div class="alpha-sub">Critical user stories SF-developed &amp; tested by Sprint 17 end (Jun 12) — gates external app development &amp; SIT trigger</div>
+    </div>
+    <div class="alpha-badge">⏳ Placeholder — data week of May 18</div>
+  </div>
+  <div class="alpha-metrics">
+    <div class="alpha-metric">
+      <div class="alpha-metric-num placeholder">TBD</div>
+      <div class="alpha-metric-label">Alpha stories total</div>
+    </div>
+    <div class="alpha-metric">
+      <div class="alpha-metric-num placeholder">—</div>
+      <div class="alpha-metric-label">SF-tested today</div>
+    </div>
+    <div class="alpha-metric">
+      <div class="alpha-metric-num placeholder">—</div>
+      <div class="alpha-metric-label">% complete</div>
+    </div>
+    <div class="alpha-metric">
+      <div class="alpha-metric-num">Jun 12</div>
+      <div class="alpha-metric-label">Target (Sprint 17 end)</div>
+    </div>
+  </div>
+  <div class="alpha-footer">
+    <span>⚡ SIT start in S3 = when Alpha complete</span>
+    <span>📋 Alpha list confirmed from Jira week of May 18</span>
+    <span>🔗 Jira label filter TBD</span>
+  </div>
+</div>
+
+<!-- NOT IN RELEASE ALERT -->
+<div class="hot-alert danger" id="hotAlert">
+  <div class="hot-left">
+    <div class="hot-num danger" id="notInRelease">2</div>
+    <div class="hot-info">
+      <strong>⚠️ Phase 1 Critical Stories – not assigned to any release</strong>
+      <p>In Phase 1 Critical Scope but not assigned to any sprint or release by Salesforce. Must reach <strong>0</strong>. Action required from Salesforce.</p>
+      <span class="delta neutral" style="margin-top:6px;">→ 0 vs yesterday</span>
+    </div>
+  </div>
+  <div class="hot-target"><div class="hot-target-label">Target</div><div class="hot-target-num">0</div></div>
+</div>
+
+<!-- BIG 3 KPIs -->
+<div class="kpi-three">
+  <div class="kpi-big todo">
+    <div class="kpi-top"><div class="kpi-label">To Do</div><span class="delta positive">-1</span></div>
+    <div class="kpi-number">56</div>
+    <div class="kpi-pct">Share of scope: <strong>7.6 %</strong></div>
+  </div>
+  <div class="kpi-big inprogress">
+    <div class="kpi-top"><div class="kpi-label">In Progress</div><span class="delta neutral">+1</span></div>
+    <div class="kpi-number">481</div>
+    <div class="kpi-pct">Share of scope: <strong>65.2 %</strong></div>
+  </div>
+  <div class="kpi-big done">
+    <div class="kpi-top"><div class="kpi-label">Done – Production Ready</div><span class="delta neutral">→ 0</span></div>
+    <div class="kpi-number">201</div>
+    <div class="kpi-pct">Completion: <strong>27.2 %</strong></div>
+  </div>
+</div>
+
+<!-- PROGRESS BAR -->
+<div class="progress-card">
+  <div class="progress-header">
+    <span>Phase 1 Critical Scope – overall progress (738 stories)</span>
+    <span class="progress-pct">27.2 % Done</span>
+  </div>
+  <div class="bar-bg"><div class="bar-fill" style="width:27.2%"></div></div>
+  <div class="bar-markers"><span>0</span><span style="color:#1B6B6B;font-weight:600;">▲ now 201</span><span>50 %</span><span>75 %</span><span>738</span></div>
+</div>
+
+<!-- SCENARIO PANEL -->
+<div class="scenario-section">
+  <div class="scenario-section-title">🎯 Scenario Analysis — Three paths to Go-Live</div>
+  <div class="scenario-grid" id="scenarioGrid">
+    <!-- Filled by JS -->
+  </div>
+</div>
+
+<!-- PIPELINE + PROBLEMS -->
+<div class="two-col">
+  <div class="ip-section">
+    <div class="section-label">In Progress – stage breakdown</div>
+    <div class="ip-stages">
+      <div class="ip-stage ref">
+        <div class="ip-stage-num">17</div>
+        <div class="ip-stage-label">🔵 In Refinement</div>
+        <div class="ip-delta"><span class="delta neutral">→ 0</span></div>
+      </div>
+      <div class="ip-stage sfdev">
+        <div class="ip-stage-num">58</div>
+        <div class="ip-stage-label">🟠 SF Development</div>
+        <div class="ip-delta"><span class="delta neutral">-4</span></div>
+      </div>
+      <div class="ip-stage sftest">
+        <div class="ip-stage-num">170</div>
+        <div class="ip-stage-label">🟡 SF Testing</div>
+        <div class="ip-delta"><span class="delta neutral">+8</span></div>
+      </div>
+      <div class="ip-stage svvqa">
+        <div class="ip-stage-num">143</div>
+        <div class="ip-stage-label">🟢 SVV QA</div>
+        <div class="ip-delta"><span class="delta neutral">→ 0</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="pc-card">
+    <div class="pc-header">
+      <div class="pc-title-label">⚠️ Problem items</div>
+      <div>
+        <span style="font-size:10px;color:#6b7280;">Total: </span>
+        <span class="pc-total">92</span>
+        <span style="font-size:10px;color:#6b7280;margin-left:4px;">(12.5%)</span>
+        <span class="delta positive" style="margin-left:6px;">-3</span>
+      </div>
+    </div>
+    <div class="pc-grid">
+      <div class="pc-item">
+        <div class="pc-item-num">26</div>
+        <div class="pc-item-label">Design missing</div>
+        <div class="pc-item-delta"><span class="delta positive">-1</span></div>
+      </div>
+      <div class="pc-item">
+        <div class="pc-item-num">48</div>
+        <div class="pc-item-label">On Hold</div>
+        <div class="pc-item-delta"><span class="delta positive">-2</span></div>
+      </div>
+      <div class="pc-item">
+        <div class="pc-item-num">18</div>
+        <div class="pc-item-label">Defect</div>
+        <div class="pc-item-delta"><span class="delta neutral">→ 0</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- VELOCITY METRICS -->
+<div class="metrics-row">
+  <div class="metric-card">
+    <div class="metric-val" id="velDaily">0 / day</div>
+    <div class="metric-label">Daily velocity (Done)</div>
+    <div class="metric-sub">vs. yesterday</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-val na" id="vel7day">— / day</div>
+    <div class="metric-label">7-day rolling avg</div>
+    <div class="metric-sub" id="vel7daySub">Available May 19</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-val" id="sfTestThroughput" style="color:#d97706;">170</div>
+    <div class="metric-label">In SF Testing</div>
+    <div class="metric-sub">Leading indicator for Done (+8)</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-val" style="color:#374151;">537</div>
+    <div class="metric-label">Stories remaining</div>
+    <div class="metric-sub">Phase 1 Spillover: 87</div>
+  </div>
+</div>
+
+<!-- SPRINT SCHEDULE -->
+<div class="sprint-section">
+  <div class="section-label">📅 Sprint Schedule — Development to Go-Live</div>
+  <div class="sprint-grid">
+    <div class="sprint-card active">
+      <div class="sprint-badge active">ACTIVE</div>
+      <div class="sprint-label">Sprint 15</div>
+      <div class="sprint-dates">May 12–15</div>
+      <div class="sprint-days-num">1</div>
+      <div class="sprint-note">Today = holiday · 1 day left</div>
+    </div>
+    <div class="sprint-card upcoming">
+      <div class="sprint-label">Sprint 16</div>
+      <div class="sprint-dates">May 18–29</div>
+      <div class="sprint-days-num">10</div>
+      <div class="sprint-note" style="color:#374151;">DI, RCB, User Mgmt due May 18</div>
+    </div>
+    <div class="sprint-card alpha-sprint">
+      <div class="sprint-badge alpha">ALPHA DEADLINE</div>
+      <div class="sprint-label">Sprint 17</div>
+      <div class="sprint-dates">Jun 1–12</div>
+      <div class="sprint-days-num">10</div>
+      <div class="sprint-note green">🔑 Alpha SF-tested by Jun 12<br/>Integrations, Mulesoft Jun 1</div>
+    </div>
+    <div class="sprint-card upcoming">
+      <div class="sprint-badge s1end">S1 DEADLINE</div>
+      <div class="sprint-label">Sprint 18</div>
+      <div class="sprint-dates">Jun 15–Jul 3</div>
+      <div class="sprint-days-num">15</div>
+      <div class="sprint-note" style="color:#dc2626;">S1: all 738 done by Jul 3</div>
+    </div>
+    <div class="sprint-card s2only">
+      <div class="sprint-badge s2only-badge">S2 ONLY</div>
+      <div class="sprint-label">Sprint 19</div>
+      <div class="sprint-dates">Jul 7–18</div>
+      <div class="sprint-days-num">10</div>
+      <div class="sprint-note amber">SF works · SVV on break</div>
+    </div>
+    <div class="sprint-card s2only">
+      <div class="sprint-badge s2only-badge">S2 ONLY</div>
+      <div class="sprint-label">Sprint 20</div>
+      <div class="sprint-dates">Jul 21–31</div>
+      <div class="sprint-days-num">10</div>
+      <div class="sprint-note amber">SF works · SVV on break<br/>S2 deadline: Jul 31</div>
+    </div>
+  </div>
+  <div class="sprint-summary">
+    <span><strong style="font-size:15px;color:#1B6B6B;">36</strong> &nbsp;working days to S1 deadline (Jul 3)</span>
+    <span><strong style="font-size:15px;color:#d97706;">56</strong> &nbsp;working days to S2 deadline (Jul 31)</span>
+    <span><strong style="font-size:15px;color:#6b7280;">SVV Break</strong> &nbsp;Jul 6 – Aug 3</span>
+    <span><strong style="font-size:15px;color:#374151;">SIT → Go-Live</strong> &nbsp;= Alpha done + 17 weeks</span>
+    <span><strong style="font-size:15px;color:#1B6B6B;">Nov 23, 2026</strong> &nbsp;Planned Go-Live</span>
+  </div>
+</div>
+
+<!-- CHARTS -->
+<div class="charts-grid">
+  <div class="chart-card">
+    <div class="chart-title">Burn-up — Done actual vs. S1 &amp; S2 required pace</div>
+    <div class="chart-wrap"><canvas id="burnupChart"></canvas></div>
+  </div>
+  <div class="chart-card">
+    <div class="chart-title">Status breakdown today (738 stories)</div>
+    <div class="chart-wrap"><canvas id="statusDonut"></canvas></div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  Auto-updated weekdays · Snapshots: SVV/obelix/execution/phase 1 progress/snapshots.json · Sprint 17 Alpha deadline Jun 12 · Go-Live Nov 23, 2026 ·
+  <a href="https://fpci.atlassian.net/jira/dashboards/10479" target="_blank">Open Jira ↗</a>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// DATA — updated daily by scheduled task
+// ═══════════════════════════════════════════════════════════
+const SNAPSHOTS = [{"date": "2026-05-12", "done": 201}, {"date": "2026-05-13", "done": 201}, {"date": "2026-05-14", "done": 201}];
+const TOTAL = 738;
+const TODAY_STR = '2026-05-14';
+const CURRENT_DONE = 201;
+const REMAINING = TOTAL - CURRENT_DONE; // 537
+const CURRENT_SVV_QA = 143;
+const ALPHA_TOTAL = null; // TBD week of May 18
+
+// ═══════════════════════════════════════════════════════════
+// WORKING DAY UTILITIES
+// ═══════════════════════════════════════════════════════════
+function workingDaysBetween(fromStr, toStr) {
+  let count = 0;
+  let d = new Date(fromStr);
+  d.setDate(d.getDate() + 1); // start day after from
+  const end = new Date(toStr);
+  while (d <= end) {
+    const day = d.getDay();
+    if (day !== 0 && day !== 6) count++;
+    d.setDate(d.getDate() + 1);
+  }
+  return count;
+}
+
+function addWorkingDays(fromStr, n) {
+  let d = new Date(fromStr);
+  let added = 0;
+  while (added < n) {
+    d.setDate(d.getDate() + 1);
+    if (d.getDay() !== 0 && d.getDay() !== 6) added++;
+  }
+  return d;
+}
+
+function fmtDate(d) {
+  if (!d) return '—';
+  return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+function fmtDateShort(d) {
+  return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+}
+
+// ═══════════════════════════════════════════════════════════
+// VELOCITY
+// ═══════════════════════════════════════════════════════════
+const n = SNAPSHOTS.length;
+const dailyVelocity = n >= 2 ? SNAPSHOTS[n-1].done - SNAPSHOTS[n-2].done : null;
+
+// 7-day rolling avg (needs 8+ snapshots for 7 deltas)
+let rollingAvg7 = null;
+if (n >= 8) {
+  let sum = 0;
+  for (let i = n-7; i < n; i++) sum += SNAPSHOTS[i].done - SNAPSHOTS[i-1].done;
+  rollingAvg7 = sum / 7;
+}
+
+// Best velocity for projections: rolling avg if available, else daily
+const projVelocity = rollingAvg7 !== null ? rollingAvg7 : dailyVelocity;
+
+// ═══════════════════════════════════════════════════════════
+// SCENARIO CALCULATIONS
+// ═══════════════════════════════════════════════════════════
+const S1_DEADLINE = '2026-07-03';
+const S2_DEADLINE = '2026-07-31';
+const POST_DEV_WEEKS = 17; // SIT Readiness → Sanity → Go-Live
+const PLANNED_GOLIVE = new Date('2026-11-23');
+
+const wdS1 = workingDaysBetween(TODAY_STR, S1_DEADLINE); // ~36
+const wdS2 = workingDaysBetween(TODAY_STR, S2_DEADLINE); // ~56
+
+const reqVelS1 = (REMAINING / wdS1).toFixed(1);
+const reqVelS2 = (REMAINING / wdS2).toFixed(1);
+
+// Projected done by deadline (based on best velocity)
+const projDoneS1 = projVelocity !== null
+  ? Math.min(TOTAL, CURRENT_DONE + Math.round(Math.max(0, projVelocity) * wdS1))
+  : null;
+const projDoneS2 = projVelocity !== null
+  ? Math.min(TOTAL, CURRENT_DONE + Math.round(Math.max(0, projVelocity) * wdS2))
+  : null;
+const atRiskS1 = projDoneS1 !== null ? Math.max(0, TOTAL - projDoneS1) : null;
+const atRiskS2 = projDoneS2 !== null ? Math.max(0, TOTAL - projDoneS2) : null;
+
+// S2 SVV QA backlog estimate (stories still in SVV QA when SVV returns Aug 3)
+const svvQaBacklogS2 = projVelocity !== null && projVelocity >= 0
+  ? Math.max(0, CURRENT_SVV_QA - Math.round(Math.max(0, projVelocity) * wdS2))
+  : CURRENT_SVV_QA;
+
+// S3: projected dev complete & Go-Live
+let s3DevComplete = null, s3GoLive = null, s3DelayWeeks = null;
+if (projVelocity !== null && projVelocity > 0) {
+  const daysNeeded = Math.ceil(REMAINING / projVelocity);
+  s3DevComplete = addWorkingDays(TODAY_STR, daysNeeded);
+  s3GoLive = new Date(s3DevComplete);
+  s3GoLive.setDate(s3GoLive.getDate() + POST_DEV_WEEKS * 7);
+  s3DelayWeeks = Math.round((s3GoLive - PLANNED_GOLIVE) / (7 * 24 * 3600 * 1000));
+}
+
+// Feasibility indicators
+function s1Feasibility() {
+  const rv = parseFloat(reqVelS1);
+  if (rv > 12) return { cls: 'red', text: '🔴 Off track — requires fundamental acceleration' };
+  if (rv > 7)  return { cls: 'amber', text: '🟡 Challenging — possible with major push' };
+  return { cls: 'green', text: '🟢 On track' };
+}
+function s2Feasibility() {
+  const rv = parseFloat(reqVelS2);
+  if (rv > 10) return { cls: 'red', text: '🔴 Off track even with Sprint 19+20' };
+  if (rv > 5)  return { cls: 'amber', text: '🟡 Possible — ueeds sustained acceleration' };
+  return { cls: 'green', text: '🟢 Achievable' };
+}
+
+// ═══════════════════════════════════════════════════════════
+// RENDER SCENARIO CARDS
+// ═══════════════════════════════════════════════════════════
+function val(v, suffix, cls) {
+  if (v === null || v === undefined) return `<span class="sc-row-val grey">—</span>`;
+  return `<span class="sc-row-val ${cls}">${v}${suffix || ''}</span>`;
+}
+
+const f1 = s1Feasibility();
+const f2 = s2Feasibility();
+const s1GoLiveColor = f1.cls === 'green' ? '#15803d' : (f1.cls === 'amber' ? '#d97706' : '#dc2626');
+const s2GoLiveTxt = atRiskS2 !== null && atRiskS2 === 0 ? 'Nov 23, 2026' : (atRiskS2 !== null ? 'Nov 23 – Dec 2026' : '—');
+
+document.getElementById('scenarioGrid').innerHTML = `
+<!-- S1 -->
+<div class="sc-card s1">
+  <div class="sc-tag">S1</div>
+  <div class="sc-title">Current Plan</div>
+  <div class="sc-desc">All 738 stories done by Sprint 18 end (Jul 3). Salesforce's baseline plan.</div>
+  <div class="sc-rows">
+    <div class="sc-row">
+      <span class="sc-row-label">Required velocity</span>
+      ${val(reqVelS1, ' stories/day', 'red')}
+    </div>
+    <div class="sc-row">
+      <span class="sc-row-label">Working days left</span>
+      ${val(wdS1, ' days (to Jul 3)', 'red')}
+    </div>
+    <div class="sc-row">
+      <span class="sc-row-label">Projected done by Jul 3</span>
+      ${val(projDoneS1 !== null ? projDoneS1 + ' / 738' : null, '', 'red')}
+    </div>
+    ${projVelocity !== null && projVelocity === 0 ? '<div style="font-size:10px;color:#9ca3af;padding:4px 10px 2px;font-style:italic;">⏳ Velocity data accumulating — projections update ~May 19</div>' : ''}
+    <div class="sc-row">
+      <span class="sc-row-label">Stories at risk</span>
+      ${val(atRiskS1 !== null ? atRiskS1 : null, ' stories', 'red')}
+    </div>
+  </div>
+  <div class="sc-feasibility ${f1.cls}">${f1.text}</div>
+  <div class="sc-golive" style="background:#fef2f2;border-radius:7px;margin-top:8px;">
+    <div class="sc-golive-label">Go-Live (if achieved)</div>
+    <div class="sc-golive-date" style="color:${s1GoLiveColor};">Nov 23, 2026</div>
+  </div>
+</div>
+
+<!-- S2 -->
+<div class="sc-card s2">
+  <div class="sc-tag">S2</div>
+  <div class="sc-title">Extended Plan</div>
+  <div class="sc-desc">SF continues Jul 7–31. SVV on break, no QA. SVV QA resumes Aug 3 before SIT.</div>
+  <div class="sc-rows">
+    <div class="sc-row">
+      <span class="sc-row-label">Required velocity</span>
+      ${val(reqVelS2, ' stories/day', 'amber')}
+    </div>
+    <div class="sc-row">
+      <span class="sc-row-label">Working days left</span>
+      ${val(wdS2, ' days (to Jul 31)', 'amber')}
+    </div>
+    <div class="sc-row">
+      <span class="sc-row-label">Projected done by Jul 31</span>
+      ${val(projDoneS2 !== null ? projDoneS2 + ' / 738' : null, '', 'amber')}
+    </div>
+    ${projVelocity !== null && projVelocity === 0 ? '<div style="font-size:10px;color:#9ca3af;padding:4px 10px 2px;font-style:italic;">⏳ Velocity data accumulating — projections update ~May 19</div>' : ''}
+    <div class="sc-row">
+      <span class="sc-row-label">SVV QA backlog (Aug 3)</span>
+      ${val(svvQaBacklogS2 !== null ? '~' + svvQaBacklogS2 : null, ' stories', 'amber')}
+    </div>
+  </div>
+  <div class="sc-feasibility ${f2.cls}">${f2.text}</div>
+  <div class="sc-golive" style="background:#fffbeb;border-radius:7px;margin-top:8px;">
+    <div class="sc-golive-label">Go-Live (if achieved)</div>
+    <div class="sc-golive-date" style="color:#d97706;">${s2GoLiveTxt}</div>
+  </div>
+</div>
+
+<!-- S3 -->
+<div class="sc-card s3">
+  <div class="sc-tag">S3</div>
+  <div class="sc-title">Forecasted Reality</div>
+  <div class="sc-desc">SIT starts when Alpha complete. All post-dev phases fixed (17 wks). Updated daily.</div>
+  <div class="sc-rows">
+    <div class="sc-row">
+      <span class="sc-row-label">Current velocity (7-day avg)</span>
+      ${rollingAvg7 !== null ? val(rollingAvg7.toFixed(1), ' /day', 'blue') : '<span class="sc-row-val grey">Available May 19</span>'}
+    </div>
+    <div class="sc-row">
+      <span class="sc-row-label">Projected dev complete</span>
+      ${s3DevComplete !== null ? val(fmtDate(s3DevComplete), '', 'blue') : '<span class="sc-row-val grey">—</span>'}
+    </div>
+    <div class="sc-row">
+      <span class="sc-row-label">SIT start (= Alpha done)</span>
+      ${ALPHA_TOTAL ? val(fmtDate(s3DevComplete), '', 'blue') : '<span class="sc-row-val grey">After Alpha confirmed</span>'}
+    </div>
+    <div class="sc-row">
+      <span class="sc-row-label">Delay vs. Nov 23</span>
+      ${s3DelayWeeks !== null ? val((s3DelayWeeks > 0 ? '+' : '') + s3DelayWeeks, ' weeks', s3DelayWeeks > 8 ? 'red' : 'amber') : '<span class="sc-row-val grey">—</span>'}
+    </div>
+  </div>
+  <div class="sc-feasibility grey" id="s3Feasibility">⏳ 7-day rolling avg available May 19</div>
+  <div class="sc-golive" style="background:#eff6ff;border-radius:7px;margin-top:8px;">
+    <div class="sc-golive-label">Projected Go-Live</div>
+    <div class="sc-golive-date" style="color:#2563eb;">${s3GoLive !== null ? fmtDate(s3GoLive) : '—'}</div>
+  </div>
+</div>
+`;
+
+// ═══════════════════════════════════════════════════════════
+// BURN-UP CHART
+// ═══════════════════════════════════════════════════════════
+// Build date labels: snapshot dates + key milestones
+const snapshotLabels = SNAPSHOTS.map(s => {
+  const d = new Date(s.toStr || s.date);
+  return new Date(s.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+});
+const snapshotDone = SNAPSHOTS.map(s => s.done);
+
+// S1 required pace: from current done (May 14) to 738 on Jul 3
+// Shown as a projected line from last actual point to deadline
+// Generate weekly milestone labels for projections
+function dateLabel(str) {
+  return new Date(str).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+}
+const allLabels = [...snapshotLabels, 'Jun 12', 'Jul 3', 'Jul 31'];
+const actualData   = [...snapshotDone, null, null, null];
+const s1PaceData   = [null, null, CURRENT_DONE, null, 738, null]; // from May 14 to Jul 3
+const s2PaceData   = [null, null, CURRENT_DONE, null, null, 738]; // from May 14 to Jul 31
+const targetLine   = allLabels.map(() => TOTAL);
+
+const burnCtx = document.getElementById('burnupChart').getContext('2d');
+new Chart(burnCtx, {
+  type: 'line',
+  data: {
+    labels: allLabels,
+    datasets: [
+      { label: 'Done (actual)',   data: actualData,  borderColor: '#1B6B6B', backgroundColor: 'rgba(27,107,107,0.12)', borderWidth: 2.5, fill: true, tension: 0.3, pointRadius: 4, pointBackgroundColor: '#1B6B6B', spanGaps: false },
+      { label: 'S1 required pace (Jul 3)',  data: s1PaceData, borderColor: '#dc2626', borderDash: [5,4], borderWidth: 1.5, fill: false, pointRadius: 3, tension: 0, spanGaps: false },
+      { label: 'S2 required pace (Jul 31)', data: s2PaceData, borderColor: '#f59e0b', borderDash: [5,4], borderWidth: 1.5, fill: false, pointRadius: 3, tension: 0, spanGaps: false },
+      { label: 'Total (738)',     data: targetLine,  borderColor: '#d1d5db', borderDash: [6,4], borderWidth: 1, fill: false, pointRadius: 0 }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { labels: { font: { size: 10 }, boxWidth: 12, padding: 8 } } },
+    scales: {
+      x: { ticks: { font: { size: 10 } }, grid: { display: false } },
+      y: { min: 0, max: 780, ticks: { font: { size: 10 } }, grid: { color: '#f3f4f6' } }
+    }
+  }
+});
+
+// ═══════════════════════════════════════════════════════════
+// STATUS DONUT
+// ═══════════════════════════════════════════════════════════
+const donutCtx = document.getElementById('statusDonut').getContext('2d');
+new Chart(donutCtx, {
+  type: 'doughnut',
+  data: {
+    labels: ['Done ✓','SVV QA','SF Testing','SF Dev','In Refinement','To Do','On Hold','Design missing','Defect'],
+    datasets: [{ data: [201,143,170,58,17,56,48,26,18], backgroundColor: ['#1B6B6B','#22c55e','#86efac','#E8650A','#fbbf24','#9ca3af','#dc2626','#f87171','#fca5a5'], borderWidth: 2, borderColor: '#fff' }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'right', labels: { font: { size: 9 }, boxWidth: 10, padding: 5 } },
+      tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.raw} (${Math.round(ctx.raw/TOTAL*100)}%)` } }
+    },
+    cutout: '58%'
+  }
+});
+</script>
+</body>
+</html>
