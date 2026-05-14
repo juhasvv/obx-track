@@ -1,98 +1,59 @@
 <!DOCTYPE html>
-<html lang="fi">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=1078, height=1920">
-<meta http-equiv="refresh" content="300">
-<title>Obelix Phase 1 – Info</title>
-<style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-:root {
-  --teal:    #1B6B6B;
-  --teal-dk: #134f4f;
-  --orange:  #E8650A;
-  --amber:   #d97706;
-  --green:   #15803d;
-  --red:     #dc2626;
-  --bg:      #0f1f1f;
-  --card:    #162828;
-  --border:  #1e3a3a;
-  --text:    #e8f4f4;
-  --muted:   #7aadad;
-}
-html, body { width: 1078px; height: 1920px; overflow: hidden; background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
-.header { background: var(--teal); padding: 36px 48px 30px; display: flex; justify-content: space-between; align-items: flex-end; }
-.header-left h1 { font-size: 38px; font-weight: 800; color: #fff; letter-spacing: -0.5px; }
-.header-left .sub { font-size: 17px; color: rgba(255,255,255,0.75); margin-top: 6px; }
-.updated-block { text-align: right; }
-.updated-label { font-size: 13px; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
-.updated-time { font-size: 22px; font-weight: 700; color: #fff; line-height: 1; }
-.updated-date { font-size: 15px; color: rgba(255,255,255,0.75); margin-top: 4px; }
-.content { padding: 32px 40px; display: flex; flex-direction: column; gap: 28px; }
-.kpi-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
-.kpi-card { background: var(--card); border-radius: 16px; padding: 28px 20px 24px; border-top: 5px solid var(--border); text-align: center; }
-.kpi-card.todo { border-top-color: #6b7280; }
-.kpi-card.ip   { border-top-color: var(--orange); }
-.kpi-card.done { border-top-color: var(--teal); }
-.kpi-label { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 12px; }
-.kpi-num { font-size: 80px; font-weight: 900; line-height: 1; }
-.kpi-card.todo .kpi-num { color: #9ca3af; }
-.kpi-card.ip   .kpi-num { color: var(--orange); }
-.kpi-card.done .kpi-num { color: #4ade80; }
-.kpi-pct { font-size: 16px; color: var(--muted); margin-top: 8px; }
-.progress-wrap { background: var(--card); border-radius: 16px; padding: 24px 28px; }
-.progress-header { display: flex; justify-content: space-between; font-size: 15px; color: var(--muted); margin-bottom: 14px; font-weight: 600; }
-.progress-pct { color: #4ade80; font-size: 18px; font-weight: 800; }
-.bar-bg { background: #1e3a3a; border-radius: 8px; height: 16px; overflow: hidden; }
-.bar-fill { height: 100%; border-radius: 8px; background: linear-gradient(90deg, var(--teal), #4ade80); }
-.section-title { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 16px; }
-.pipeline-card { background: var(--card); border-radius: 16px; padding: 28px; }
-.pipeline-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-.stage { border-radius: 12px; padding: 20px 22px; display: flex; justify-content: space-between; align-items: center; }
-.stage.ref    { background: #0c2233; border-left: 4px solid #0ea5e9; }
-.stage.sfdev  { background: #231508; border-left: 4px solid var(--orange); }
-.stage.sftest { background: #231a04; border-left: 4px solid var(--amber); }
-.stage.svvqa  { background: #0c2218; border-left: 4px solid #22c55e; }
-.stage-name { font-size: 14px; color: var(--muted); font-weight: 600; margin-bottom: 4px; }
-.stage-num  { font-size: 52px; font-weight: 900; line-height: 1; }
-.stage.ref    .stage-num { color: #38bdf8; }
-.stage.sfdev  .stage-num { color: var(--orange); }
-.stage.sftest .stage-num { color: #fbbf24; }
-.stage.svvqa  .stage-num { color: #4ade80; }
-.stage-delta { font-size: 14px; font-weight: 700; padding: 4px 10px; border-radius: 20px; }
-.neutral  { background: #1e3a3a; color: var(--muted); }
-.positive { background: #14532d; color: #4ade80; }
-.negative { background: #450a0a; color: #f87171; }
-.problems-card { background: var(--card); border-radius: 16px; padding: 28px; border-left: 5px solid var(--amber); }
-.problems-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-.problems-title { font-size: 16px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
-.problems-total { font-size: 36px; font-weight: 900; color: var(--amber); }
-.problems-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
-.prob-item { border-radius: 10px; padding: 16px; text-align: center; background: rgba(217,119,6,0.08); }
-.prob-num   { font-size: 40px; font-weight: 900; color: var(--amber); }
-.prob-label { font-size: 12px; color: var(--muted); margin-top: 4px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
-.release-card { background: var(--card); border-radius: 16px; padding: 24px 28px; border-left: 5px solid var(--red); display: flex; align-items: center; justify-content: space-between; }
-.release-left { display: flex; align-items: center; gap: 20px; }
-.release-num { font-size: 64px; font-weight: 900; color: var(--red); line-height: 1; }
-.release-info strong { font-size: 16px; color: var(--text); }
-.release-info p { font-size: 13px; color: var(--muted); margin-top: 4px; }
-.release-target { text-align: right; }
-.release-target-label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
-.release-target-num { font-size: 36px; font-weight: 900; color: var(--green); }
-.footer { position: absolute; bottom: 0; left: 0; right: 0; background: var(--teal-dk); padding: 16px 40px; display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: rgba(255,255,255,0.6); }
-</style>
-</head>
-<body>
+<html lang="fi"><head><meta charset="UTF-8"><meta name="viewport" content="width=1078, height=1920"><meta http-equiv="refresh" content="300"><title>Obelix Phase 1 – Info</title>
+<style>* { box-sizing: border-box; margin: 0; padding: 0; }
+:root { --teal:#1B6B6B; --teal-dk:#134f4f; --orange:#E8650A; --amber:#d97706; --green:#15803d; --red:#dc2626; --bg:#0f1f1f; --card:#162828; --border:#1e3a3a; --text:#e8f4f4; --muted:#7aadad; }
+html,body{width:1078px;height:1920px;overflow:hidden;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}
+.header{background:var(--teal);padding:36px 48px 30px;display:flex;justify-content:space-between;align-items:flex-end;}
+.header-left h1{font-size:38px;font-weight:800;color:#fff;letter-spacing:-0.5px;}
+.header-left .sub{font-size:17px;color:rgba(255,255,255,0.75);margin-top:6px;}
+.updated-block{text-align:right;}
+.updated-label{font-size:13px;color:rgba(255,255,255,0.6);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;}
+.updated-time{font-size:22px;font-weight:700;color:#fff;line-height:1;}
+.updated-date{font-size:15px;color:rgba(255,255,255,0.75);margin-top:4px;}
+.content{padding:32px 40px;display:flex;flex-direction:column;gap:28px;}
+.kpi-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;}
+.kpi-card{background:var(--card);border-radius:16px;padding:28px 20px 24px;border-top:5px solid var(--border);text-align:center;}
+.kpi-card.todo{border-top-color:#6b7280;}.kpi-card.ip{border-top-color:var(--orange);}.kpi-card.done{border-top-color:var(--teal);}
+.kpi-label{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:12px;}
+.kpi-num{font-size:80px;font-weight:900;line-height:1;}
+.kpi-card.todo .kpi-num{color:#9ca3af;}.kpi-card.ip .kpi-num{color:var(--orange);}.kpi-card.done .kpi-num{color:#4ade80;}
+.kpi-pct{font-size:16px;color:var(--muted);margin-top:8px;}
+.progress-wrap{background:var(--card);border-radius:16px;padding:24px 28px;}
+.progress-header{display:flex;justify-content:space-between;font-size:15px;color:var(--muted);margin-bottom:14px;font-weight:600;}
+.progress-pct{color:#4ade80;font-size:18px;font-weight:800;}
+.bar-bg{background:#1e3a3a;border-radius:8px;height:16px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:8px;background:linear-gradient(90deg,var(--teal),#4ade80);}
+.section-title{font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:16px;}
+.pipeline-card{background:var(--card);border-radius:16px;padding:28px;}
+.pipeline-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.stage{border-radius:12px;padding:20px 22px;display:flex;justify-content:space-between;align-items:center;}
+.stage.ref{background:#0c2233;border-left:4px solid #0ea5e9;}.stage.sfdev{background:#231508;border-left:4px solid var(--orange);}
+.stage.sftest{background:#231a04;border-left:4px solid var(--amber);}.stage.svvqa{background:#0c2218;border-left:4px solid #22c55e;}
+.stage-name{font-size:14px;color:var(--muted);font-weight:600;margin-bottom:4px;}
+.stage-num{font-size:52px;font-weight:900;line-height:1;}
+.stage.ref .stage-num{color:#38bdf8;}.stage.sfdev .stage-num{color:var(--orange);}.stage.sftest .stage-num{color:#fbbf24;}.stage.svvqa .stage-num{color:#4ade80;}
+.stage-delta{font-size:14px;font-weight:700;padding:4px 10px;border-radius:20px;}
+.neutral{background:#1e3a3a;color:var(--muted);}
+.problems-card{background:var(--card);border-radius:16px;padding:28px;border-left:5px solid var(--amber);}
+.problems-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;}
+.problems-title{font-size:16px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
+.problems-total{font-size:36px;font-weight:900;color:var(--amber);}
+.problems-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+.prob-item{border-radius:10px;padding:16px;text-align:center;background:rgba(217,119,6,0.08);}
+.prob-num{font-size:40px;font-weight:900;color:var(--amber);}
+.prob-label{font-size:12px;color:var(--muted);margin-top:4px;font-weight:600;text-transform:uppercase;}
+.release-card{background:var(--card);border-radius:16px;padding:24px 28px;border-left:5px solid var(--red);display:flex;align-items:center;justify-content:space-between;}
+.release-left{display:flex;align-items:center;gap:20px;}
+.release-num{font-size:64px;font-weight:900;color:var(--red);line-height:1;}
+.release-info strong{font-size:16px;color:var(--text);}.release-info p{font-size:13px;color:var(--muted);margin-top:4px;}
+.release-target{text-align:right;}
+.release-target-label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
+.release-target-num{font-size:36px;font-weight:900;color:var(--green);}
+.footer{position:absolute;bottom:0;left:0;right:0;background:var(--teal-dk);padding:16px 40px;display:flex;justify-content:space-between;align-items:center;font-size:13px;color:rgba(255,255,255,0.6);}
+</style></head><body>
 <div class="header">
-  <div class="header-left">
-    <h1>Obelix Phase 1</h1>
-    <div class="sub">SF-toteutus · 738 user storyä · Go-Live 23.11.2026</div>
-  </div>
-  <div class="updated-block">
-    <div class="updated-label">Jira päivitetty</div>
-    <div class="updated-time">14.5.2026</div>
-    <div class="updated-date">klo 08:14</div>
-  </div>
+  <div class="header-left"><h1>Obelix Phase 1</h1><div class="sub">SF-toteutus · 738 user storyä · Go-Live 23.11.2026</div></div>
+  <div class="updated-block"><div class="updated-label">Jira päivitetty</div><div class="updated-time">14.5.2026</div><div class="updated-date">klo 08:14</div></div>
 </div>
 <div class="content">
   <div class="kpi-row">
@@ -130,5 +91,4 @@ html, body { width: 1078px; height: 1920px; overflow: hidden; background: var(--
   <span>Obelix Phase 1 · 738 user storyä · Go-Live 23.11.2026</span>
   <span>Lähde: Jira · fpci.atlassian.net</span>
 </div>
-</body>
-</html>
+</body></html>
