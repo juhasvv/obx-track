@@ -23,10 +23,15 @@
   --muted:   #7aadad;
 }
 
-html, body {
+html {
+  overflow-y: auto;
+  background: var(--bg);
+}
+body {
   width: 1078px;
   min-height: 1920px;
-  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
   background: var(--bg);
   color: var(--text);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -203,8 +208,6 @@ html, body {
 
 /* ── FOOTER ── */
 .footer {
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
   background: var(--teal-dk);
   padding: 16px 40px;
   display: flex;
@@ -212,6 +215,7 @@ html, body {
   align-items: center;
   font-size: 13px;
   color: rgba(255,255,255,0.6);
+  margin-top: auto;
 }
 .footer strong { color: rgba(255,255,255,0.85); }
 </style>
@@ -353,7 +357,7 @@ html, body {
 <!-- FOOTER -->
 <div class="footer">
   <span>Obelix Phase 1 · 738 user storyä · Go-Live 23.11.2026</span>
-  <span>Muutos ed. päivästä (14.5.2026) · Lähde: Jira · fpci.atlassian.net</span>
+  <span>Muutos ed. päivästä (14.5.2026) · Lähde: Jira</span>
 </div>
 
 <script>
