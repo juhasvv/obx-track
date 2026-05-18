@@ -118,6 +118,10 @@ body {
   color: var(--muted);
   margin-top: 8px;
 }
+.kpi-delta { font-size: 11px; font-weight: 700; margin-top: 6px; padding: 2px 8px; border-radius: 10px; display: inline-block; }
+.kpi-delta.positive { background: #dcfce7; color: #15803d; }
+.kpi-delta.negative { background: #fef2f2; color: #dc2626; }
+.kpi-delta.neutral  { background: #f3f4f6; color: #6b7280; }
 
 /* ── PROGRESS BAR ── */
 .progress-wrap {
@@ -244,16 +248,19 @@ body {
       <div class="kpi-label">To Do</div>
       <div class="kpi-num">49</div>
       <div class="kpi-pct">6.6 % scopesta</div>
+      <div class="kpi-delta positive">-7</div>
     </div>
     <div class="kpi-card ip">
       <div class="kpi-label">In Progress</div>
       <div class="kpi-num">488</div>
       <div class="kpi-pct">66.1 % scopesta</div>
+      <div class="kpi-delta neutral">+7</div>
     </div>
     <div class="kpi-card done">
       <div class="kpi-label">Done ✓</div>
       <div class="kpi-num">201</div>
       <div class="kpi-pct">27.2 % valmis</div>
+      <div class="kpi-delta neutral">→ 0</div>
     </div>
   </div>
 
